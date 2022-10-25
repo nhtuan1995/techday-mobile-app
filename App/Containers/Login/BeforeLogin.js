@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import RenderSvg from '../../Components/Svg/Render';
 import { debounce } from 'lodash';
+import RenderImage from '../../Components/RenderImage';
 
 const BeforeLogin = ({ navigation }) => {
-	(debounce(()=>{
-		navigation.navigate('Login')
-	},3000))();
+
+	useEffect(() => {
+		(debounce(() => {
+			navigation.navigate('Login')
+		}, 3000))();
+	}, [])
+	
 	return (
 		<View style={styles.screen}>
-					<RenderSvg iconName={'FPTLogo'} width={82} height={50} />
+			<RenderImage name={'beforeLogin'} width={'100%'} height="100%" />
 		</View>
 	);
 }
@@ -17,9 +22,7 @@ const styles = StyleSheet.create({
 	screen: {
 		width: '100%',
 		height: '100%',
-		display: 'flex', 
-		justifyContent:'center', 
-		alignItems:'center',
+		flex: 1,
 	},
 });
 

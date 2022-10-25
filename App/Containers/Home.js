@@ -50,7 +50,7 @@ function Home({ navigation }) {
   }
 
   const navigateToTuanSample = () =>{
-    navigation.navigate('Survey');
+    navigation.navigate('Login');
   }
 
   const functions = useMemo(() => {

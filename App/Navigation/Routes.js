@@ -11,6 +11,8 @@ import BeforeLogin from '../Containers/Login/BeforeLogin'
 import Login from '../Containers/Login/Login'
 import TuanSample from '../Containers/TuanSample';
 import Survey from '../Containers/Survey/Survey';
+import Register from '../Containers/Register/Register';
+import RegisterInfo from '../Containers/Register/RegisterInfo'
 
 export default [
   {
@@ -64,6 +66,14 @@ export default [
   {
     name: 'Survey', 
     component : Survey,
+  },
+  {
+    name: 'Register', 
+    component : Register,
+  },
+  {
+    name: 'RegisterInfo', 
+    component : RegisterInfo,
   },
 ]
 

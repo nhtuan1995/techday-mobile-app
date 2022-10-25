@@ -18,14 +18,15 @@ const TEXT_COLOR = {
 const LinearGradientButton = ({
   text,
   onPress,
-  isLoading = false
+  containerStyle,
+  isLoading = false,
 }) => {
   const handlePress = () => {
     if(onPress) onPress();
   }
   return (
     <>
-      <TouchableOpacity onPress={handlePress}>
+      <TouchableOpacity style={containerStyle} onPress={handlePress}>
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -58,6 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
 });
 
 

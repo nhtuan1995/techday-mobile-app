@@ -29,7 +29,7 @@ const FloatingInput = ({
         value={value}
         onChangeText={value => setValue(value)}
         inputStyles={{borderRadius: 8, padding: 4, borderColor:'#dddd', borderStyle:'solid', color:'red'}}
-        labelStyles={{color: '#838895'}}
+        labelStyles={{color: 'red'}}
       />
 
       

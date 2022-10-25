@@ -5,7 +5,7 @@ import noImage from './noImage.png';
 import logo from './logo.png';
 import activity from './activity.png';
 import linearBackground from './linearBackground.png';
-
+import beforeLogin from './BeforeLogin.png'
 export default {
     avatar,
     bell,
@@ -13,5 +13,6 @@ export default {
     noImage,
     logo,
     activity,
-    linearBackground
+    linearBackground,
+    beforeLogin
 }

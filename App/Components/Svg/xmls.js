@@ -22,6 +22,7 @@ import message from './Icons/message';
 import ArrowBackWhite from './Icons/arrowBackWhite';
 import CheckedRadio from './Icons/checkedRadio';
 import LinearBackground from './Icons/LinearBackground';
+import LoginHeader from './Icons/loginHeader'
 const defaultProps = {
   color: '#ccc',
 };
@@ -206,6 +207,9 @@ const xmls = {
   },
   linearBackground: (props = {}) => {
     return LinearBackground({ ...defaultProps, ...props });
+  },
+  loginHeader: (props = {}) => {
+    return LoginHeader({ ...defaultProps, ...props });
   },
 
 }
