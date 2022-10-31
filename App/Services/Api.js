@@ -1,7 +1,7 @@
 import apisauce from 'apisauce';
 import NetInfo from "@react-native-community/netinfo";
 
-import { baseApiUrl } from '../Config';
+import { baseApiURL } from '../Config';
 
 const rqTimeout = 18000;
 
@@ -27,7 +27,7 @@ const create = (baseURL = 'https://api.github.com/') => {
 
 const request = async (baseURL, type, url, params, headers) => {
   if (typeof baseURL === 'undefined') {
-    baseURL = baseApiUrl;
+    baseURL = baseApiURL;
   }
   const api = apisauce.create({
     baseURL,
@@ -87,7 +87,7 @@ const request = async (baseURL, type, url, params, headers) => {
 
 const basicRequest = async (method, url, params = {}, withMess = false) => {
   return new Promise((resolve, reject) => {
-    request(baseApiUrl, method, url, params)
+    request(baseApiURL, method, url, params)
       .then(response => {
         if (response.success) {
           if (!withMess) {
@@ -110,7 +110,7 @@ const basicRequest = async (method, url, params = {}, withMess = false) => {
 }
 
 // let's return back our create method as the default.
-export default {
+export {
   create,
   request,
   basicRequest,

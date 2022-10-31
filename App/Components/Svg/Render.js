@@ -7,7 +7,6 @@ export default function Render (props) {
     width = 24,
     height = 24,
     iconName = null,
-    color = '#ccc',
     style = {},
     nullElement = null,
   } = props;
@@ -24,7 +23,7 @@ export default function Render (props) {
   return (
     <SvgXml
       style={style}
-      xml={xmls[iconName]({color: color})}
+      xml={xmls[iconName]({color: props.color})}
       width={width}
       height={height || width}
     />

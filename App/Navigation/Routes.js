@@ -1,18 +1,18 @@
 import BottomNavigation from './BottomNavigation';
 import Setting from '../Containers/Setting';
-import TreasureHunt from '../Containers/TreasureHunt/index';
-import TreasureScan from '../Containers/TreasureHunt/TreasureScan';
-import TreasureArchivement from '../Containers/TreasureHunt/TreasureArchivement';
-import TreasureDetails from '../Containers/TreasureHunt/TreasureDetails';
-import TreasureFinish from '../Containers/TreasureHunt/TreasureFinish';
-import BookingMeeting from '../Containers/BookingMeeting/index';
-import CreateBookingMeeting from '../Containers/BookingMeeting/CreateBookingMeeting';
-import BeforeLogin from '../Containers/Login/BeforeLogin'
-import Login from '../Containers/Login/Login'
-import TuanSample from '../Containers/TuanSample';
+import EventDetail from '../Containers/Agenda/Detail';
+import EventMap from '../Containers/Agenda/Map';
+import ExhibitionDetail from '../Containers/Exhibition/Detail';
+import OurStory from '../Containers/OurStory/index';
+import Profile from '../Containers/Profile/index';
+import DemoTest from '../Containers/DemoTest/index';
 import Survey from '../Containers/Survey/Survey';
-import Register from '../Containers/Register/Register';
+import Login from '../Containers/Login/Login'
+import Register from '../Containers/Register/Register'
 import RegisterInfo from '../Containers/Register/RegisterInfo'
+import PasswordChange from '../Containers/Profile/PasswordChange'
+import {About, AboutDetail} from '../Containers/About';
+import { TreasureHuntIntro , TreasureHuntAchievement } from '../Containers/TreasureHunt';
 
 export default [
   {
@@ -24,59 +24,64 @@ export default [
     component: Setting,
   },
   {
-    name: 'TreasureHunt',
-    component: TreasureHunt,
+    name: 'EventDetail',
+    component: EventDetail,
   },
   {
-    name: 'TreasureScan',
-    component: TreasureScan,
+    name: 'ExhibitionDetail',
+    component: ExhibitionDetail,
   },
   {
-    name: 'TreasureArchivement', 
-    component : TreasureArchivement,
+    name: 'EventMap',
+    component: EventMap,
   },
   {
-    name: 'TreasureDetails', 
-    component : TreasureDetails,
+    name: 'OurStory',
+    component: OurStory,
   },
   {
-    name: 'TreasureFinish', 
-    component : TreasureFinish,
+    name: 'Profile',
+    component: Profile,
   },
   {
-    name: 'BookingMeeting', 
-    component : BookingMeeting,
+    name: 'DemoTest',
+    component: DemoTest,
   },
   {
-    name: 'CreateBookingMeeting', 
-    component : CreateBookingMeeting,
+    name: 'Survey',
+    component: Survey,
   },
   {
-    name: 'BeforeLogin', 
-    component : BeforeLogin,
-  },
-    {
-    name: 'Login', 
-    component : Login,
+    name: 'Login',
+    component: Login,
+    
   },
   {
-    name: 'TuanSample', 
-    component : TuanSample,
+    name: 'AboutDetail',
+    component: AboutDetail,
   },
   {
-    name: 'Survey', 
-    component : Survey,
+    name: 'About',
+    component: About,
   },
   {
-    name: 'Register', 
-    component : Register,
+    name: 'Register',
+    component: Register,
   },
   {
-    name: 'RegisterInfo', 
-    component : RegisterInfo,
+    name: 'RegisterInfo',
+    component: RegisterInfo,
   },
+  {
+    name: 'PasswordChange',
+    component: PasswordChange,
+  },
+  {
+    name: 'TreasureHuntIntro',
+    component: TreasureHuntIntro,
+  },
+  {
+    name: 'TreasureHuntAchievement',
+    component: TreasureHuntAchievement,
+  }
 ]
-
-
-
-

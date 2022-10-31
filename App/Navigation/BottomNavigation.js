@@ -7,9 +7,9 @@ import Home from '../Containers/Home';
 import Agenda from '../Containers/Agenda';
 import QR from '../Containers/QR';
 import Conference from '../Containers/Conference';
-import Exhibition from '../Containers/Exhibition';
+import Exhibition from '../Containers/Exhibition/index';
 import RenderSvg from '../Components/Svg/Render';
-import { Colors } from '../Themes';
+import { Colors, Fonts } from '../Themes';
 import { getCurrentRoute } from '../Services/NavigationService';
 
 const Tab = createBottomTabNavigator();
@@ -21,10 +21,12 @@ function BottomNavigation() {
     Home: {
       icon: 'iconHome',
       component: Home,
+      options: { title: 'Trang chủ' },
     },
     Agenda: {
       icon: 'iconCalendar',
       component: Agenda,
+      options: { title: 'Lịch sự kiện' },
     },
     QR: {
       icon: 'iconQR',
@@ -32,12 +34,14 @@ function BottomNavigation() {
       options: { tabBarLabel: () => null },
     },
     Conference: {
-      icon: 'iconHandShake',
+      icon: 'icon3DSquare',
       component: Conference,
+      options: { title: 'Triển lãm CN' },
     },
     Exhibition: {
-      icon: 'iconUserView',
+      icon: 'iconUsers',
       component: Exhibition,
+      options: { title: 'Diễn đàn CN' },
     },
   };
 
@@ -46,12 +50,16 @@ function BottomNavigation() {
     if (!iconName) {
       return null;
     }
-    color = focused ? Colors.active : Colors.inactive;
+    size = 22;
     let iconStyle = {};
     if (routeName === 'QR') {
-      size = hasNotch ? 78 : 68;
-      iconStyle = { marginTop: hasNotch ? 8 : 5 };
+      size = 68;
+      iconStyle = { top: -8 };
       color = Colors.active;
+    } else {
+      if (focused) {
+        iconName = iconName + 'Active';
+      }
     }
     return <RenderSvg iconName={iconName} color={color} width={size} height={size} style={iconStyle} />
   }
@@ -81,12 +89,12 @@ function BottomNavigation() {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration,
+          duration: 50,
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           toValue: initScale,
-          duration,
+          duration: 50,
           useNativeDriver: true,
         }),
       ]).start(({finished}) => {
@@ -118,16 +126,25 @@ function BottomNavigation() {
         tabBarIcon: ({ focused, color, size }) => {
           return renderIcon(route.name, focused, color, size);
         },
-        tabBarIconStyle: { top: hasNotch ? 6 : 0 },
+        tabBarIconStyle: { top: hasNotch ? 2 : -2 },
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 10,
           bottom: hasNotch ? 0 : 10,
+          ...Fonts.weight.semiBold,
         },
         tabBarStyle: {
-          height: hasNotch ? 90 : 55,
+          height: hasNotch ? 80 : 55,
           borderTopWidth: 1,
-          borderTopColor: Colors.border,
+          borderTopColor: '#EAEEFA',
+          marginTop: -24,
+          shadowColor: '#0b45c2',
+          shadowOffset: {
+            width: 0,
+            height: -2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 12,
         },
         tabBarActiveTintColor: Colors.active,
       })}

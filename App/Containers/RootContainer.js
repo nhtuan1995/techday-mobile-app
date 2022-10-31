@@ -1,19 +1,21 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
 import MainNavigation from '../Navigation/MainNavigation';
+import { setNavigator } from '../Services/NavigationService';
 
 function RootContainer(props) {
-  const _navigator = useRef();
 
   return (
     <NavigationContainer
-      ref={_navigator}
+      ref={ref => {
+        setNavigator(ref);
+      }}
       theme={{
         ...DefaultTheme,
         colors: {
           ...DefaultTheme.colors,
-          // background: 'transparent',
+          background: '#fff',
         },
       }}
     >

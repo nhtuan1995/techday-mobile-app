@@ -1,23 +1,20 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   TouchableOpacity,
   StyleSheet,
   Text,
-  Animated,
-  Platform,
   Linking,
   SafeAreaView,
-  StatusBar,
   ActivityIndicator,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { useScanBarcodes, BarcodeFormat } from 'vision-camera-code-scanner';
-import { useCameraDevices, Camera } from 'react-native-vision-camera';
+import { BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner';
+import { useCameraDevices, Camera, useFrameProcessor } from 'react-native-vision-camera';
+import { runOnJS } from "react-native-reanimated";
 
 import { Metrics } from '../Themes';
-import Header from '../Components/Header';
-import {Center} from 'native-base';
+import RenderSvg from '../Components/Svg/Render';
 
 const borderWidth = 2;
 const { screenWidth, screenHeight } = Metrics;
@@ -28,14 +25,13 @@ if (markerWidth > screenWidth - 16 * 2) {
 
 function QRScan(props) {
 
-  const {params = {}} = props.navigation.state || {};
+  const { params = {} } = props.navigation.state || {};
   const devices = useCameraDevices('wide-angle-camera');
   const device = devices.back;
 
-  // const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.QR_CODE], {
-  //   checkInverted: true,
-  // });
   const [hasPermission, setHasPermission] = useState(false);
+  const [qrCode, setQrCode] = useState(null);
+  const [cameraActive, setCameraActive] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -49,11 +45,22 @@ function QRScan(props) {
   }, []);
 
   const goBack = () => {
-    props.navigation.navigate('App');
-    if (params.onCancel) {
-      params.onCancel();
-    }
+    props.navigation.goBack();
   }
+
+  const onQRCodeDetected = useCallback((qrCode) => {
+    setQrCode(qrCode);
+    console.log('qrCode', qrCode);
+    // call success function here
+  }, []);
+
+  const frameProcessor = useFrameProcessor(frame => {
+    'worklet';
+    let qrCodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE], {checkInverted: true});
+    if (qrCodes.length > 0) {
+      runOnJS(onQRCodeDetected)(qrCodes[0]);
+    }
+  }, [onQRCodeDetected]);
 
   const isFocused = useIsFocused();
   if (!isFocused) {
@@ -63,28 +70,37 @@ function QRScan(props) {
   return (
     <View style={styles.cameraContainer}>
       <SafeAreaView style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }} />
+      <TouchableOpacity style={styles.backBtn} onPress={goBack}>
+        <RenderSvg iconName={'iconChevronLeft'} color="#000" />
+      </TouchableOpacity>
 
       {!device ? (
-        <ActivityIndicator />
+        <View style={styles.centerContent}>
+          <ActivityIndicator />
+        </View>
       ) : (
         hasPermission ? (
           <>
             <Camera
               style={styles.camera}
               device={device}
-              isActive={true}
-              // frameProcessor={frameProcessor}
-              // frameProcessorFps={5}
+              isActive={cameraActive}
+              frameProcessor={frameProcessor}
+              frameProcessorFps={5}
             >
               <View style={styles.marker}>
+                <View style={styles.descBox}>
+                  <Text style={styles.textDesc}>Di chuyển Camera lại gần QR code</Text>
+                </View>
+
                 <View style={[styles.overlay, styles.overlayTopBottom, {
                   bottom: markerWidth - borderWidth,
                 }]}></View>
                 <View style={[styles.overlay, styles.overlayLeftRight, {
-                  right: markerWidth - borderWidth,
+                  right: markerWidth - borderWidth + 1,
                 }]}></View>
                 <View style={[styles.overlay, styles.overlayLeftRight, {
-                  left: markerWidth - borderWidth,
+                  left: markerWidth - borderWidth + 1,
                 }]}></View>
                 <View style={[styles.overlay, styles.overlayTopBottom, {
                   top: markerWidth - borderWidth,
@@ -98,16 +114,12 @@ function QRScan(props) {
                 <View style={[styles.lineHorCover, styles.lineCover3]}></View>
                 <View style={[styles.lineHorCover, styles.lineCover4]}></View>
                 <View style={[styles.lineVerCover, styles.lineCover4]}></View>
-
-                <View style={styles.descBox}>
-                  <Text style={styles.textDesc}>Di chuyển Camera lại gần QR code</Text>
-                </View>
               </View>
             </Camera>
           </>
         ) : (
-          <View>
-            <Text>Không có quyền truy cập Camera!</Text>
+          <View style={styles.centerContent}>
+            <Text style={styles.textError}>Không có quyền truy cập Camera!</Text>
           </View>
         )
       )}
@@ -119,6 +131,11 @@ export default QRScan;
 
 const pos = -16;
 const styles = StyleSheet.create({
+  centerContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   cameraContainer: {
     flex: 1,
   },
@@ -133,12 +150,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   overlayTopBottom: {
-    width: screenWidth,
+    width: screenWidth + 2,
     height: (screenHeight - markerWidth) / 2,
-    left: -(screenWidth - markerWidth) / 2 - borderWidth,
+    left: -(screenWidth - markerWidth) / 2 - borderWidth - 1,
   },
   overlayLeftRight: {
-    width: (screenWidth - markerWidth) / 2,
+    width: (screenWidth - markerWidth) / 2 + 2,
     height: markerWidth,
     bottom: -borderWidth,
   },
@@ -202,5 +219,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     paddingHorizontal: 16,
-  }
+  },
+  backBtn: {
+    zIndex: 10,
+    elevation: 10,
+    width: 49,
+    height: 49,
+    borderRadius: 25,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 12,
+    marginTop: 8,
+  },
+  textError: {
+    fontSize: 15,
+    color: '#ff0000',
+  },
 });

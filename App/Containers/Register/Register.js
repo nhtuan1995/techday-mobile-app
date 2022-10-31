@@ -4,33 +4,23 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
-  TextInput
+  ScrollView,
+  StatusBar,
+  Animated
 } from 'react-native';
-import Header from '../../Components/Header';
 import RenderSvg from '../../Components/Svg/Render';
+import RenderImage from '../../Components/RenderImage';
+import LinearGradient from 'react-native-linear-gradient';
+import { Fonts } from '../../Themes';
+
+
 import Content from '../../Components/Content';
 import LinearGradientButton from '../../Components/LinearGradientButton';
-import MultipleChoiceQuestion from '../../Components/MultipleChoiceQuestion';
-import RenderImage from '../../Components/RenderImage';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 
 
-
-const CustomHeader = ({ onPress }) => {
-  return (
-    <View style={styles.customHeader}>
-      <TouchableOpacity style={{ width: 64 }} onPress={onPress}>
-        <RenderSvg iconName="arrowBackWhite" width={64} height={64} />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 const NumberInput = ({ isOTP, value, setValue }) => {
-  const [show, setShow] = useState(false);
-
   return (
     <>
       <View style={{ width: '100%', marginTop: 16, marginBottom: 24, height: 64 }}>
@@ -64,65 +54,82 @@ const NumberInput = ({ isOTP, value, setValue }) => {
 
 function Register({ navigation }) {
   const handleBack = () => {
-    alert('back to homepage');
+    navigation.goBack();
   };
 
   const handleSubmit = () => {
     setIsOTP(true);
   };
 
-  const handleDone = () =>{
+  const handleDone = () => {
     navigation.navigate('RegisterInfo')
   }
 
   const [phone, setPhone] = useState(null)
   const [isOTP, setIsOTP] = useState(false)
+
   const handlePhone = (value) => {
     setPhone(value);
   }
 
   return (
-    <>
-      <RenderImage
-        name={'linearBackground'}
-        width={'100%'}
-        height={'100%'}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0 }}
+    <ScrollView>
+      <StatusBar
+        backgroundColor="transparent"
+        translucent={true}
       />
-      <Content>
-        <CustomHeader onPress={handleBack} />
-        <Text style={styles.title}>Đăng ký</Text>
-        {isOTP &&
-          <>
-            <View style={styles.register}>
-              <Text style={{ color: '#838895' }}>Vui lòng nhập mã OTP được gửi đến số </Text>
-              <TouchableOpacity>
-                <Text style={{ color: '#213992' }}>(+84) 285 358 455</Text>
-              </TouchableOpacity>
-              <NumberInput isOTP={isOTP} value={phone} setValue={handlePhone} />
-              <LinearGradientButton containerStyle={styles.submitButton} text="Tiếp tục" onPress={handleDone} />
-              <TouchableOpacity onPress={()=>{setIsOTP(false)}}>
-                <Text style={{ color: '#F57E25' }}>Gửi lại</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        }
+      <LinearGradient
+        colors={['#E4EFFF', '#FFF']}
+        style={[{ flex: 1 }, { paddingHorizontal: 24 , minHeight: 800}]}>
+        {/* <SafeAreaView /> */}
 
-        {!isOTP &&
-          <>
-            <Text style={styles.subTitle}>Nhập số điện thoại của bạn để tiếp tục</Text>
-            <NumberInput isOTP={isOTP} value={phone} setValue={handlePhone} />
-            <LinearGradientButton containerStyle={styles.submitButton} text="Tiếp tục" onPress={handleSubmit} />
-            <View style={styles.register}>
-              <Text style={{ color: '#838895' }}>Bằng việc đăng nhập, bạn đã đồng ý với</Text>
-              <TouchableOpacity>
-                <Text style={{ color: '#213992' }}>Điều khoản & Chính sách bảo mật</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        }
-      </Content>
-    </>
+        <View style={styles.ourStoryHeader}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Home')}
+            style={[styles.circleRound, { marginBottom: 32 }]}>
+            <RenderSvg
+              iconName="iconChevronLeft"
+              color="#22313F"
+              width={22}
+              style={{ marginLeft: -2 }}
+            />
+          </TouchableOpacity>
+        </View>
+
+          <Text style={styles.title}>Đăng ký</Text>
+
+          {isOTP &&
+            <>
+              <View style={styles.register}>
+                <Text style={{ color: '#838895' }}>Vui lòng nhập mã OTP được gửi đến số </Text>
+                <TouchableOpacity>
+                  <Text style={{ color: '#213992' }}>(+84) 285 358 455</Text>
+                </TouchableOpacity>
+                <NumberInput isOTP={isOTP} value={phone} setValue={handlePhone} />
+                <LinearGradientButton containerStyle={styles.submitButton} label="Tiếp tục" onPress={handleDone} />
+                <TouchableOpacity onPress={() => { setIsOTP(false) }}>
+                  <Text style={{ color: '#F57E25' }}>Gửi lại</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
+
+          {!isOTP &&
+            <>
+              <Text style={styles.subTitle}>Nhập số điện thoại của bạn để tiếp tục</Text>
+              <NumberInput isOTP={isOTP} value={phone} setValue={handlePhone} />
+              <LinearGradientButton containerStyle={styles.submitButton} label="Tiếp tục" onPress={handleSubmit} />
+              <View style={styles.register}>
+                <Text style={{ color: '#838895' }}>Bằng việc đăng nhập, bạn đã đồng ý với</Text>
+                <TouchableOpacity>
+                  <Text style={{ color: '#213992' }}>Điều khoản & Chính sách bảo mật</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
+
+        </LinearGradient>
+    </ScrollView>
   );
 }
 
@@ -163,12 +170,12 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 32,
-    fontWeight: '600',
     lineHeight: 40,
     color: '#253645',
     textAlign: 'center',
     marginBottom: 8,
-    fontFamily: 'SVNGilroy'
+    ...Fonts.weight.semiBold,
+
 
   },
   subTitle: {
@@ -176,7 +183,8 @@ const styles = StyleSheet.create({
     color: '#253645',
     width: '100%',
     textAlign: 'center',
-    fontFamily: 'SVNGilroy'
+    ...Fonts.weight.medium,
+
   },
   submitButton: {
     width: '100%',
@@ -189,7 +197,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
-
 
   //test !!!
   borderStyleBase: {
@@ -215,5 +222,19 @@ const styles = StyleSheet.create({
   underlineStyleHighLighted: {
     borderColor: "#213992",
     color: 'black'
+  },
+
+  //header 
+  circleRound: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ourStoryHeader: {
+    marginTop: 68,
+    marginBottom: 72,
   },
 });

@@ -1,5 +1,7 @@
-const baseApiUrl = '';
+import env from '../Env';
+
+const { baseApiURL } = env;
 
 export {
-  baseApiUrl,
+  baseApiURL,
 }

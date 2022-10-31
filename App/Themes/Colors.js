@@ -1,8 +1,11 @@
 export default {
   dark: '#ccc',
   light: '#fff',
-  text: '#000',
-  inactive: '#98A2B3',
-  active: '#213992',
-  border: '#F2F3F9',
+  text: '#253645',
+  inactive: '#838895',
+  active: '#192A80',
+  border: '#EAEEFA',
+  title: '#213992',
+  blue: '#213992',
+  warningColor: '#F57E25',
 }

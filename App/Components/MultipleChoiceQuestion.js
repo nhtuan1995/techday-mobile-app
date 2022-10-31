@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Radio,TextArea, Center, NativeBaseProvider, FormControl} from 'native-base';
 import RenderSvg from '../Components/Svg/Render';
-
 // components
 // common
 

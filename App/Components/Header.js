@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, SafeAreaView, View, Text, StatusBar } fro
 
 import { Colors, Fonts } from '../Themes';
 import RenderSvg from '../Components/Svg/Render';
+import { goBack as navGoBack } from '../Services/NavigationService';
 
 function SectionHeader({
   title = null, // text
@@ -11,7 +12,6 @@ function SectionHeader({
   titleType = 'center',
   leftContent = null,
   rightContent = null,
-  hasBoder = false,
   arrowBack = true,
   iconBackName = 'iconChevronLeft',
   iconBackColor = Colors.text,
@@ -23,6 +23,7 @@ function SectionHeader({
   titleStyle = {},
   leftStyle = {},
   rightStyle = {},
+  noBorder = true,
   goBack,
   ...props
 }) {
@@ -33,20 +34,25 @@ function SectionHeader({
   return (
     <>
       <SafeAreaView androidStatusBarColor={bgColor} style={{ backgroundColor: bgColor }} />
-      <StatusBar bg={bgColor} barStyle={barStyle} />
+      <StatusBar translucent={bgColor === 'transparent'} backgroundColor={bgColor} barStyle={barStyle} />
       <HStack
         style={[
           styles.header,
-          { height: headerHeight },
+          { height: headerHeight, backgroundColor: bgColor },
+          noBorder && { borderBottomWidth: 0 },
           headerStyle,
-          hasBoder ? styles.border : {}
         ]}
         {...props}
       >
         <View style={[styles.leftHeader, leftStyle]}>
           {arrowBack && (
             <TouchableOpacity
-              onPress={goBack}
+              onPress={() => {
+                if (goBack) {
+                  return goBack();
+                }
+                navGoBack();
+              }}
             >
               {iconBackName && (
                 <RenderSvg iconName={iconBackName} color={iconBackColor} />
@@ -61,7 +67,7 @@ function SectionHeader({
 
         <Center style={{ flex: 1 }}>
           {title && (
-            <Text style={[styles.title, titleStyle]}>{title}</Text>
+            <Text style={[styles.title, titleStyle]} numberOfLines={1}>{title}</Text>
           )}
           {titleContent && (
             titleContent
@@ -83,11 +89,12 @@ export default React.memo(SectionHeader);
 
 const styles = StyleSheet.create({
   header: {
+    borderBottomWidth: 0.5,
     borderBottomColor: Colors.border,
     zIndex: 1000,
     alignItems: 'center',
     paddingHorizontal: 16,
-    height: 50,
+    height: 44,
   },
   leftHeader: {
     minWidth: 50,
@@ -96,17 +103,8 @@ const styles = StyleSheet.create({
     minWidth: 50,
   },
   title: {
-    fontSize: 17,
-    color: Colors.text,
-    ...Fonts.weight.medium,
+    fontSize: 18,
+    color: Colors.title,
+    ...Fonts.weight.semiBold,
   },
-  border: {
-    shadowColor: '#defcfc',
-    shadowOffset: { width: 1, height: 1 },
-    width: '100%',
-    height: 44,
-    shadowOpacity: 0.4,
-    shadowRadius: 0,
-    elevation: 4,
-  }
 });

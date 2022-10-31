@@ -66,4 +66,6 @@ buck-out/
 # my
 yarn.lock
 ios/techdayApp.xcodeproj/project.pbxproj
-.eslintrc.js
+ios/Podfile.lock
+App/Env/environment.js
+

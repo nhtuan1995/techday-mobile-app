@@ -1,3 +1,23 @@
+let _navigator;
+
+const setNavigator = (navigatorRef) => {
+  _navigator = navigatorRef;
+}
+
+const goBack = () => {
+  if (!_navigator) {
+    return;
+  }
+  return _navigator.goBack();
+}
+
+const navigate = (screen, params = {}) => {
+  if (!_navigator) {
+    return;
+  }
+  _navigator.navigate(screen, params);
+}
+
 const getCurrentRoute = (navigation) => {
   const {routes, index} = navigation;
   if (routes.length < 1 || typeof routes[index] == 'undefined') {
@@ -17,4 +37,7 @@ const getCurrentRoute = (navigation) => {
 
 export {
   getCurrentRoute,
+  setNavigator,
+  goBack,
+  navigate,
 }

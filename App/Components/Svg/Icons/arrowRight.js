@@ -1,7 +1,20 @@
-export default () => {
-    return `
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9 4.5L16.5 12L9 19.5" stroke="#F2F4F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+export default ({ color = '#253645' }) => (
+  `
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="none"
+      viewBox="0 0 16 16"
+    >
+      <path
+        stroke="${color}"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="1.5"
+        d="M9.62 3.953L13.667 8 9.62 12.047M2.333 8h11.22"
+      ></path>
     </svg>
-    `
-}
+  `
+)

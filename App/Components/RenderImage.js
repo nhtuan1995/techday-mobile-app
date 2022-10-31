@@ -4,8 +4,6 @@ import images from '../Images/index';
 
 export default function Render(props) {
 	const {
-		width = 24,
-		height = 24,
 		name = null,
 		style = {},
 		nullElement = null,
@@ -21,8 +19,6 @@ export default function Render(props) {
 		<Image
 			style={style}
 			source={source}
-			width={width}
-			height={height || width}
 			{...props}
 		/>
 	)
