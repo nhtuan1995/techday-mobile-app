@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const getAgendas = async () => {
   let results = [];
-  for (let i = 1; i < 10; i++) {
+  for (let i = 1; i < 15; i++) {
     results.push({
       "_id": "6350ff569838532e8bd22087" + i,
       "title": "Welcome " + i,
@@ -32,7 +32,8 @@ const getAgendas = async () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve({
-        agendas: groupAgendas(results)
+        agendas: groupAgendas(results),
+        total: results.length,
       });
     }, 1000);
   });
@@ -60,8 +61,8 @@ const getDetail = async (id) => {
 \nVới sự đa dạng và bề dày kinh nghiệm chúng tôi mong muốn đồng hành với quý khách hàng cùng đi đến thành công.`,
     "location": "Grand Hall",
     "date": "2022-07-20T17:00:00.000Z",
-    "start_time": "2022-10-31T02:00:00.000Z",
-    "end_time": "2022-10-31T08:00:00.000Z",
+    "start_time": "2022-11-01T03:00:00.000Z",
+    "end_time": "2022-11-01T06:00:00.000Z",
     "document_link": "https://i.ibb.co/GQKL1Kr/Rectangle-30006.png",
     "category": {
       "_id": "634e1d374cc14b6e48f650ef",
@@ -205,6 +206,10 @@ const saveQuestion = async (values = {}) => {
   return {};
 }
 
+const addToSchedule = async () => {
+  return {};
+}
+
 export {
   getAgendas,
   getDetail,
@@ -212,4 +217,5 @@ export {
   isDuringSession,
   isPastSession,
   saveQuestion,
+  addToSchedule,
 }

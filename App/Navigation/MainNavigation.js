@@ -11,6 +11,7 @@ function MainNavigation() {
       screenOptions={{
         headerShown: false,
       }}
+      initialRouteName="Laucher"
     >
       {routes.map(route => (
         <Stack.Screen

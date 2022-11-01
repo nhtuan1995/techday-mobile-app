@@ -89,6 +89,7 @@ const Login = ({ navigation }) => {
   }
   const [delay, setDelay] = useState(2000)
 
+  //BEGIN: Animtaion input username, password
   useEffect(() => {
     setDelay(0);
   }, [])
@@ -135,9 +136,7 @@ const Login = ({ navigation }) => {
       keyboardDidShowListener.remove();
     };
   }, []);
-
-
-
+  //END: Animtaion input username, password
 
   return (
     <>

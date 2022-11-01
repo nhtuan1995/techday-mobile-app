@@ -65,14 +65,16 @@ import Union from './Icons/Union';
 import TagUser from './Icons/TagUser';
 import Clock from './Icons/Clock';
 import ClockFilled from './Icons/ClockFilled';
+import Alert from './Icons/Alert';
+import TickCircle from './Icons/TickCircle';
+import InfoCircle from './Icons/InfoCircle';
+import CloseCircle from './Icons/CloseCircle';
 import DashedLine from './Icons/DashedLine';
 import IconQRCode from './Icons/QRCode';
 import Trophy from './Icons/Trophy';
+import CalendarRemove from './Icons/CalendarRemove';
 
 import Colors from '../../Themes/Colors';
-
-
-
 
 const defaultProps = {
   color: Colors.inactive,
@@ -153,9 +155,14 @@ const xmls = {
   Clock: (props = {}) => Clock({...defaultProps, ...props}),
   ClockFilled: (props = {}) => ClockFilled({...defaultProps, ...props}),
   TagUser: (props = {}) => TagUser({...defaultProps, ...props}),
+  alert: (props) => Alert({...defaultProps, ...props}),
+  tickCircle: (props) => TickCircle({...defaultProps, ...props}),
+  infoCircle: (props) => InfoCircle({...defaultProps, ...props}),
+  closeCircle: (props) => CloseCircle({...defaultProps, ...props}),
   DashedLine: (props = {}) => DashedLine({...defaultProps, ...props}),
   IconQRCode: (props = {}) => IconQRCode({...defaultProps, ...props}),
   Trophy: (props = {}) => Trophy({...defaultProps, ...props}),
+  calendarRemove: (props) => CalendarRemove({...defaultProps, ...props}),
 };
 
 export default xmls;

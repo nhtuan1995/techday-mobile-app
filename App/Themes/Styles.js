@@ -49,6 +49,14 @@ export default {
     color: Colors.text,
     lineHeight: 22,
   },
+  textUnderline: {
+    textDecorationLine: 'underline',
+  },
+  textAlert: {
+    fontSize: 16,
+    color: '#fff',
+    ...Fonts.weight.medium,
+  },
   fontMedium: {
     ...Fonts.weight.medium,
   },

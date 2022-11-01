@@ -1,3 +1,4 @@
+import Laucher from '../Containers/Laucher';
 import BottomNavigation from './BottomNavigation';
 import Setting from '../Containers/Setting';
 import EventDetail from '../Containers/Agenda/Detail';
@@ -15,6 +16,10 @@ import {About, AboutDetail} from '../Containers/About';
 import { TreasureHuntIntro , TreasureHuntAchievement } from '../Containers/TreasureHunt';
 
 export default [
+  {
+    name: 'Laucher',
+    component: Laucher,
+  },
   {
     name: 'Main',
     component: BottomNavigation,

@@ -1,9 +1,9 @@
-import React, {useMemo} from 'react';
-import {View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Keyboard} from 'react-native';
 
 import {Modal, HStack, Center} from 'native-base';
 import LinearGradientButton from './LinearGradientButton';
-import { Fonts, Colors } from 'Themes';
+import { Fonts, Colors, Metrics } from 'Themes';
 
 const PopUpModal = ({
   isOpen, //boolean
@@ -24,6 +24,26 @@ const PopUpModal = ({
   children,
   ...props
 }) => {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  //show/hide keyboard
+  useEffect(() => {
+    const kbShowListener = Keyboard.addListener('keyboardWillShow', (e) => {
+      let { height } = e.endCoordinates;
+      setKeyboardHeight(height);
+      setIsShowKeyboard(true);
+    });
+    const kbHideListener = Keyboard.addListener('keyboardWillHide', () => {
+      setIsShowKeyboard(false);
+    });
+
+    return () => {
+      kbShowListener.remove();
+      kbHideListener.remove();
+    }
+  }, []);
+
   const onPressOK = () => {
     if (onOk) onOk();
   };
@@ -96,7 +116,13 @@ const PopUpModal = ({
 
   return (
     <Modal isOpen={isOpen} style={{...styles.wrapper, ...style}} {...props}>
-      <Modal.Content style={{...styles.modal, ...modalStyle}}>
+      <Modal.Content style={[
+        {...styles.modal, ...modalStyle},
+        isShowKeyboard && {
+          marginBottom: keyboardHeight,
+          maxHeight: Metrics.screenHeight - Metrics.navBarHeight - keyboardHeight,
+        },
+      ]}>
         {showClose && <Modal.CloseButton />}
         {headerTitle && (
           <Modal.Header

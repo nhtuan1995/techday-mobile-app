@@ -3,29 +3,12 @@ import NetInfo from "@react-native-community/netinfo";
 
 import { baseApiURL } from '../Config';
 
+import devAPI from '../Env/dev'
+
 const rqTimeout = 18000;
 
-const create = (baseURL = 'https://api.github.com/') => {
-  const api = apisauce.create({
-    baseURL,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    timeout: rqTimeout,
-  });
 
-  const getRoot = () => api.get('');
-  const getRate = () => api.get('rate_limit');
-  const getUser = username => api.get('search/users', {q: username});
-
-  return {
-    getRoot,
-    getRate,
-    getUser,
-  };
-};
-
-const request = async (baseURL, type, url, params, headers) => {
+const request = async (baseURL=devAPI.baseApiURL, type, url, params, headers) => {
   if (typeof baseURL === 'undefined') {
     baseURL = baseApiURL;
   }
@@ -54,7 +37,7 @@ const request = async (baseURL, type, url, params, headers) => {
 
   api.addRequestTransform(async request => {
     // set token
-    // request.headers.Authorization = 'Bearer ' + token;
+    request.headers.Authorization = 'Bearer ' + devAPI.accessToken;
   });
 
   let apiCall;

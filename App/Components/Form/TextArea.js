@@ -20,6 +20,7 @@ export default function TextArea({
       paddingTop={3}
       paddingBottom={3}
       style={{ ...Fonts.weight.medium, ...style }}
+      isFocused={false}
       _focus={{
         backgroundColor: '#fefefe',
         borderColor: Colors.active,

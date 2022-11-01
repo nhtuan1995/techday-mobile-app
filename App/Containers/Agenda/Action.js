@@ -9,16 +9,20 @@ import {
   isPreSession,
   isDuringSession,
   saveQuestion,
+  addToSchedule,
 } from '../../Services/AgendaService';
 import RenderSvg from 'Components/Svg/Render';
 import { TextArea, Select } from 'Components/Form';
 import { validateValue } from '../../Common';
+import { useToast } from '../../Components/Toast';
 
 import styles from '../../Styles/AgendaStyles';
 
 export default function Action({
   event,
 }) {
+  const toast = useToast();
+
   const hasNotch = DeviceInfo.hasNotch();
   const [initing, setIniting] = useState(true);
   const [showCreateQuestion, setShowCreateQuestion] = useState(false);
@@ -35,6 +39,7 @@ export default function Action({
     },
   });
   const [saving, setSaving] = useState(false);
+  const [addingSchedule, setAddingSchedule] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -79,7 +84,29 @@ export default function Action({
     setSaving(true);
     setTimeout(() => {
       setSaving(false);
+      setShowCreateQuestion(false);
+      toast.show({
+        type: 'success',
+        title: 'Bạn đã gửi công hỏi đến diễn giả',
+        delay: 500,
+      });
     }, 2000);
+  }
+
+  const handleAddToSchedule = () => {
+    setAddingSchedule(true);
+    setTimeout(() => {
+      setAddingSchedule(false);
+      toast.show({
+        type: 'success',
+        title: (
+          <>
+            <Text style={styles.textAlert}>Thêm thành công sự kiện vào lịch trình </Text>
+            <Text style={[styles.textAlert, styles.textUnderline]}>Xem lịch trình</Text>
+          </>
+        ),
+      });
+    }, 1000);
   }
 
   return (
@@ -89,6 +116,10 @@ export default function Action({
           label={'+  Thêm vào lịch trình'}
           height={56}
           containerStyle={{ marginHorizontal: 24 }}
+          isLoading={addingSchedule}
+          onPress={() => {
+            handleAddToSchedule();
+          }}
         />
       )}
 
@@ -120,10 +151,10 @@ export default function Action({
           showClose={true}
           body={null}
           style={{ paddingHorizontal: 0 }}
-          modalStyle={{ marginBottom: 0, height: '60%' }}
+          modalStyle={{ marginBottom: 0, height: 428 }}
           contentStyle={{ paddingHorizontal: 16 }}
-          avoidKeyboard={true}
           size={'full'}
+          presentationStyle={'formSheet'}
         >
           <View style={styles.flexItem}>
             <View style={styles.flexItem}>

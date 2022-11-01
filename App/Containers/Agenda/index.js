@@ -16,52 +16,86 @@ import { diffTime } from '../../Common';
 
 import styles from '../../Styles/AgendaStyles';
 
-function Agenda({ animatedProps, navigation, route }) {
+function Agenda({ animatedProps, navigation }) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
+  const [sectionIndex, setSectionIndex] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const dataKeys = Object.keys(data);
   const formatTimeKey = 'YYYY-MM-DD_HH:mm';
   const activeColor = '#F57E25';
-  const _scroll = useRef();
+  const _scrollList = useRef(null);
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const _timeoutScroll = useRef(null);
+  const _numScroll = useRef(0);
+  const _scrollInterval = useRef(null);
 
   useEffect(() => {
     initScroll();
   }, [data]);
 
   useEffect(() => {
-    let navListener = navigation.addListener('focus', () => {
-      initScroll();
-    });
-
-    return navListener;
-  }, [navigation]);
-
-  const initScroll = () => {
-    if (dataKeys.length < 1) {
+    if (total < 5 || sectionIndex < 2 || isScrolled) {
       return;
     }
-    setTimeout(() => {
-      let index = null;
-      dataKeys.map(key => {
-        if (index === null) {
-          index = isActiveTime(key, true);
-        }
-      });
+    _scrollInterval.current = setInterval(() => {
+      _numScroll.current += 1;
+      console.log('trying scroll ', _numScroll.current);
+      scrollToSection(sectionIndex);
+
+      if (_numScroll.current > 5) {
+        clearInterval(_scrollInterval.current);
+      }
+    }, 700);
+
+    return () => {
+      clearInterval(_scrollInterval.current);
+    }
+  }, [total, sectionIndex, isScrolled]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const initScroll = () => {
+    if (Object.keys(data).length < 2) {
+      return;
+    }
+    clearTimeout(_timeoutScroll.current);
+    _timeoutScroll.current = setTimeout(() => {
+      let index = getCurrentSectionIndex(data);
       if (index) {
         scrollToSection(index);
       }
     }, 500);
   }
 
+  const getCurrentSectionIndex = (groupData) => {
+    let index = null;
+    let aryKeys = Object.keys(groupData);
+    for (let i = 0; i < aryKeys.length; i++) {
+      let key = aryKeys[i];
+      if (isActiveTime(key, aryKeys)) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
   const getData = () => {
+    setData({});
+    setIsScrolled(false);
+    _numScroll.current = 0;
+
     setLoading(true);
     getAgendas().then(response => {
       setData(response.agendas);
+      let initIndex = getCurrentSectionIndex(response.agendas);
+      setSectionIndex(initIndex);
+      setTotal(response.total);
     }).catch(err => {
       console.log('error', err);
     }).finally(_ => {
@@ -70,30 +104,30 @@ function Agenda({ animatedProps, navigation, route }) {
   }
 
   const scrollToSection = (index) => {
-    if (!_scroll.current) {
+    if (!_scrollList.current) {
       return;
     }
-    _scroll.current.scrollToLocation({
+    _scrollList.current.scrollToLocation({
       animated: true,
       itemIndex: 0,
       sectionIndex: index,
-      viewPosition: 0,
-      viewOffset: 0,
     });
   }
 
-  const isActiveTime = (time, returnIndex = false) => {
-    const timeIndex = dataKeys.findIndex(k => k === time);
+  const isActiveTime = (time, aryKeys = null) => {
+    if (aryKeys === null) {
+      aryKeys = dataKeys;
+    }
+    const timeIndex = aryKeys.findIndex(k => k === time);
+    if (timeIndex < 0) {
+      return false;
+    }
     const now = moment().format(formatTimeKey);
-    let nextTime = dataKeys[timeIndex + 1];
+    let nextTime = aryKeys[timeIndex + 1];
     if (typeof nextTime === 'undefined') {
       nextTime = moment(time, formatTimeKey).add(1, 'days').format(formatTimeKey);
     }
-    let isActive = time <= now && now < nextTime;
-    if (returnIndex) {
-      return isActive ? timeIndex : null;
-    }
-    return isActive;
+    return (time <= now && now < nextTime);
   }
 
   const GroupHeader = ({ timeKey }) => {
@@ -148,7 +182,7 @@ function Agenda({ animatedProps, navigation, route }) {
         <View style={styles.agendaHeader}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={[styles.circleRound, { marginBottom: 32 }]}
+            style={[styles.circleRound, { marginBottom: 16 }]}
           >
             <RenderSvg iconName="iconChevronLeft" color="#22313F" width={22} style={{ marginLeft: -2 }} />
           </TouchableOpacity>
@@ -160,37 +194,45 @@ function Agenda({ animatedProps, navigation, route }) {
           </View>
         </View>
 
-        <SectionList
-          ref={_scroll}
-          sections={dataKeys.map(key => ({ timeKey: key, data: data[key] }))}
-          keyExtractor={(item, index) => index + ''}
-          renderItem={({item, index}) => <Item item={item} index={index} />}
-          renderSectionHeader={({ section: { timeKey } }) => <GroupHeader timeKey={timeKey} />}
-          stickySectionHeadersEnabled={true}
-          ListEmptyComponent={
-            <View style={styles.flexCenter}>
-              {loading ? (
-                <ActivityIndicator />
-              ) : (
-                <Text style={[styles.alignCenter, styles.textDesc]}>
-                  Không có sự kiện nào!
-                </Text>
-              )}
-            </View>
-          }
-          onScrollToIndexFailed={() => {
-            setTimeout(info => {
-              scrollToSection(0);
-            }, 500);
-          }}
-          initialNumToRender={60}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingBottom: 24,
-            flexGrow: 1,
-          }}
-          scrollEventThrottle={400}
-        />
+        {dataKeys.length > 0 ? (
+          <SectionList
+            ref={ref => _scrollList.current = ref}
+            sections={dataKeys.map(key => ({ timeKey: key, data: data[key] || [] }))}
+            keyExtractor={(item, index) => item._id + '_' + index}
+            renderItem={({item, index}) => <Item item={item} index={index} />}
+            renderSectionHeader={({ section: { timeKey } }) => <GroupHeader timeKey={timeKey} />}
+            stickySectionHeadersEnabled={true}
+            onScrollToIndexFailed={(info) => {
+              setTimeout(() => {
+                console.log('scroll error', sectionIndex, info);
+                scrollToSection(sectionIndex);
+              }, 500);
+            }}
+            initialNumToRender={60}
+            contentContainerStyle={{
+              paddingHorizontal: 24,
+              paddingBottom: 32,
+              flexGrow: 1,
+            }}
+            onScroll={() => {
+              if (!isScrolled) {
+                setIsScrolled(true);
+              }
+            }}
+            scrollEventThrottle={400}
+            refreshing={true}
+          />
+        ) : (
+          <View style={styles.flexCenter}>
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text style={[styles.alignCenter, styles.textDesc]}>
+                Không có sự kiện nào!
+              </Text>
+            )}
+          </View>
+        )}
       </BgGradientScreen>
     </AnimatedScreen>
   )

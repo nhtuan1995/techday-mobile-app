@@ -29,7 +29,7 @@ export default React.memo(function BgGradientScreen({
       ) : (
         <>
           <SafeAreaView style={{ paddingTop: statusBarHeight }} />
-          <StatusBar translucent={true} backgroundColor={'transparent'} />
+          <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'} />  
         </>
       )}
       <View style={{flex: 1}}>

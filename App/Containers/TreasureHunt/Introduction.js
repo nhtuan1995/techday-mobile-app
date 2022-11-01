@@ -16,6 +16,9 @@ import GradientButton from '../../Components/LinearGradientButton';
 
 import styles from '../../Styles/TreasureStyles';
 
+import { useSelector, useDispatch } from 'react-redux';
+
+
 const QRButton = ({ onPress }) => {
   return (
     <GradientButton onPress={onPress} height={56} containerStyle={{ display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
@@ -25,7 +28,7 @@ const QRButton = ({ onPress }) => {
   )
 }
 
-const AchieveButton = ({ onPress  }) => {
+const AchieveButton = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.achieveButton} onPress={onPress}>
       <RenderSvg iconName="Trophy" />
@@ -35,11 +38,13 @@ const AchieveButton = ({ onPress  }) => {
 
 const Introduction = ({ animatedProps, navigation }) => {
 
+  const count = useSelector((state) => state.counter.value)
+
   const handleScan = () => {
     alert('Scan QR')
   }
 
-  const handleAchievement = () =>{
+  const handleAchievement = () => {
     navigation.navigate('TreasureHuntAchievement')
   }
 
@@ -64,7 +69,8 @@ const Introduction = ({ animatedProps, navigation }) => {
           <View style={styles.headerLeft}>
             <Text style={[styles.textNormal, { marginBottom: 8 }]}>Mini Game</Text>
             <Text style={styles.textHeader}>Treasure</Text>
-            <Text style={styles.textHeader}>Hunt</Text>
+            {/* <Text style={styles.textHeader}>Hunt</Text> */}
+            <Text style={styles.textHeader}>{count}</Text>
           </View>
         </View>
 
@@ -74,7 +80,7 @@ const Introduction = ({ animatedProps, navigation }) => {
         </View>
 
         <View style={[myStyles.part, { marginBottom: 32 }]}>
-          <OrangeArrowTitle title="Thể lệ" />
+          <OrangeArrowTitle title="Thể lệ" style={{ marginBottom: 12 }} />
           <Text style={styles.description}>
             Thank you for joining our flagship event <Text style={styles.highLight}>"FPT Techday 2022"</Text>.
             We hope you had a wonderful time with us in Vietnam.
@@ -87,7 +93,7 @@ const Introduction = ({ animatedProps, navigation }) => {
         </View>
 
         <View style={[myStyles.part, { marginBottom: 29 }]}>
-          <OrangeArrowTitle title="Phần thưởng" style={{ marginBottom: 12 }}  />
+          <OrangeArrowTitle title="Phần thưởng" style={{ marginBottom: 12 }} />
           <Text style={styles.description}>
             Thank you for joining our flagship event "FPT Techday 2022".
             We hope you had a wonderful time with us in Vietnam.
@@ -102,8 +108,8 @@ const Introduction = ({ animatedProps, navigation }) => {
           </Text>
         </View>
 
-        <View style={[myStyles.part, { marginBottom: 40}]}>
-          <HStack space={3} justifyContent="center" style={{width:'100%', paddingHorizontal: 34}}>
+        <View style={[myStyles.part, { marginBottom: 40 }]}>
+          <HStack space={3} justifyContent="center" style={{ width: '100%', paddingHorizontal: 34 }}>
             <QRButton onPress={handleScan} />
             <AchieveButton onPress={handleAchievement} />
           </HStack>

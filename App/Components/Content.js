@@ -9,6 +9,7 @@ const Content = ({children, bgColor = '#ffffff', style={}, onScroll}) => {
         onScroll={(event) => {
           if(onScroll) onScroll(event);
         }}
+        scrollEventThrottle={400}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={{paddingHorizontal: 24, backgroundColor: bgColor}}>
